@@ -1,0 +1,21 @@
+\chapter{[SKE] Parametrické modely s (ne)monotónní intenzitou poruch, únavové cyklické zkoušky, příklady použití.}
+
+\begin{define}[Normální rozdělení]
+	Mějme $T\sim \NN(\mu, \sigma^2)$ (kde zanedbáme zápornou část, tedy chceme $\mu$ dostatečně daleko od nuly). Platí, že 
+	$$ \FR(t)=\frac{\frac{1}{\sigma}\phi\big(\frac{t-\mu}{\sigma}\big)}{1-\Phi\big(\frac{t-\mu}{\sigma}\big)}.$$
+		Dále se může použít useknuté normální rozdělené v $t=0$ zleva $\mathcal{TN}(\mu,\sigma^2)$, tedy $$\RT(t)=\frac{\PP(T>t)}{\PP(T>0)}=\frac{1-\Phi\big(\frac{t-\mu}{\sigma}\big)}{1-\Phi\big(\frac{\mu}{\sigma}\big)}.$$ Pro $t>0$ je $\FR(t)$ shodná s předešlým případem.
+\end{define}
+
+Normální rozdělení se tedy dá použít na modelování třetí fáze opotřebování výrobku.
+
+\begin{define}[Gamma rozdělení]
+Mějme $T_i\sim \Exp(\lambda)$. Pak $T:=\sum_{1}^{k}T_j$ je čekací doba na výskyt $k$-té poruchy (třeba pokud máme $k$ náhradních dílů). Tím dostáváme $T\sim\mathrm{Gamma}(k,\lambda)$. $\lambda>0$ nazýváme \textbf{intenzita šoků} a $k>0$ míru rezistence. Víme dále, že $\MTTF=\E T=\frac{k}{\lambda}$. 
+\end{define}
+
+\begin{define}[Weibulovo rozdělení]
+	Definujeme \textbf{Weibulovo} rozdělení definováno vztahem $\RT(t)=\e{-(\lambda t)^\alpha}$, tedy $f_T(t)=\alpha \lambda^\alpha t^{\alpha-1}\e{-(\lambda t)^\alpha}$. Platí, že
+	$$ \FR(t)=\alpha\lambda^\alpha t^{\alpha-1},~\MTTF=\frac{1}{\lambda}\Gamma\big(1+\frac{1}{\lambda}\big),~t_\mathrm{med}=\frac{1}{\lambda}(\ln2)^{1/\alpha}.$$
+\end{define}
+
+
+
