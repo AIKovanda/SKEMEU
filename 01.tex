@@ -104,4 +104,7 @@ Doteď se pracovalo s úplným výběrem. Měli jsme tedy $n$ $iid$ objektů a p
 	Jiná možnost by byla pro $(T_1...T_n)~iid~T|\lambda\sim\Exp(\lambda)$, $\lambda\sim\mathrm{Gamma}(k,\beta)$ odhadnout parametr $\lambda$ bayesovsky a dosadit ji do $\E T|\lambda$. Parametry $(k, \beta)$ lze nalézt např. pomocí empirického Bayese.
 \end{example}
 
+% lecture 5
+	Užitečná je metoda pro life-time aplikace. Například k lékaři chodí v různém čase různí pacienti, takže se nabízí možnost vzít první sadu pacientů, odhadnout na ní nějaký parametr a postupně tento parametr updatujeme dalšími sadami pacientů.
 
+Dejme tomu, že chceme udělat predikci pro $T_{n+1}$ čas do poruchy za předpokladu, že máme data $\textbf{t}=(t_1,...,t_n)$. Potom Bayesovská prediktivní spolehlivost $R_{T_{n+1}}(t):=\PP\big(T_{n+1}>t\big| t_1,...,t_n\big)=\int_{t}^{+\infty}f_\mathrm{B}^{\mathrm{PR}}(t)\d t$ se vypočítá na základě Bayesovské prediktivní hustoty ve tvaru $f_\mathrm{B}^{\mathrm{PR}}(t):=\int_{0}^{+\infty}f_T(t|\theta)\pi(\theta|\textbf{t})\d\t$. Tento způsob je sice komplikovaný, ale třeba pro měnící se $\lambda$ nejsou jiné metody k dispozici.

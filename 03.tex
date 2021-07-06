@@ -1,6 +1,53 @@
 \chapter{[SKE] Spolehlivost komponentních systémů, redundantní struktury, důležitost komponent.}
 
+% lecture 7
 
+\begin{define}
+	Předpokládejme, že máme systém o $n$ komponentách. Budeme charakterizovat stav $i$-té komponenty $x_i$ binárně jako funguje/nefunguje, tedy $x_i\in\{0,1\}$. Označme $\textbf{x}=(x_1,...,x_n)$ jako \textbf{stavový vektor}. 
+	
+	Předpokládejme, že známe-li $\textbf{x}$, pak známe stav celého systému $S$, tzn. jsme schopni definovat \textbf{strukturní funkci} $\varphi(\textbf{x})=\begin{cases}
+	1,&\text{systém funguje,}\\0,&\text{systém nefunguje.}
+	\end{cases}$
+\end{define}
 
+Tímto způsobem můžeme zkoumat různě zapojené součásti, třeba sériově, paralelně (jsou tedy v redundanci) apod. U sériového zapojení stačí jedna vadná součástka, aby systém přestal fungovat a u paralelního systému stačí, když alespoń jedna součástka funguje, aby systém fungoval. Pozor ale že záleží na reprezentaci, někdy se např. sériově zapojené součástky chovají, jako by byly paralelní (např. ventily na potrubí, aby voda netekla, alespoň jeden ventil musí fungovat).
 
+\begin{corollary}
+	Logické zapojení komponent se může zakreslit pomocí blokových diagramů (RBD - Reliability Block Diagram) (podobné elektrickému zapojení). Pro sériově zapojené součásti máme 
+$$ \varphi(\textbf{x})=\prod_{i=1}^{n}x_i=\min(x_i)_1^n.$$
+Paralelně zapojené součástky pak
+$$ \varphi(\textbf{x})=1-\prod_{i=1}^{n}(1-x_i)\equal{ozn}=\bigsqcup_1^n x_i=\max(x_i)_1^n, $$ kde $\bigsqcup$ označuje inverzní produkt.
+\end{corollary}
 
+\begin{corollary}
+	k-o-o-n struktura (k-out-of-n) je taková, že systém funguje, pokud je alespoň $k$ z komponent je funkční. Potom
+	$$ \varphi(\textbf{x})=\begin{cases}
+	1,&\text{pokud }\sumin x_i\geq k,\\0,& \text{jinak.}
+	\end{cases}$$
+	Tento systém se může použít třeba pro přivolávání hasišů, pokud 2oon zaznamenají kouř. Tímto se eliminují false positive chyby ve stylu zapálená cigareta apod. Například systém 2oo3 se dá zapsat jako paralelní vlákna $\{(1,2), (2,3),(1,3)\}$. Není to však jediná možnost, viz přednáška 7, 34 minuta. OBRÁZEK!!
+	
+	Máme tedy $\varphi(\textbf{x})=x_1x_2\bigsqcup x_1x_3\bigsqcup x_2x_3$
+\end{corollary}
+
+\begin{theorem}
+	Mějme systém S o $n$ komponentech. Mějme dále minimální cesty $P_1,...,P_n$ (z tvrzení výše). Pak $$ \varphi(\textbf{x})=\bigsqcup_{j=1}^k \prod_{i\in P_j} x_i.$$
+	Naopak z minimálních řezů $K_1,...,K_l$ můžeme dostat
+	$$ \varphi(\textbf{x})= \prod_{j=1}^k \bigsqcup_{i\in K_j} x_i.$$
+	V praxi pak používáme ten vzorec, který nejvíce zjednodušuje výpočet.
+\end{theorem}
+
+\begin{corollary}
+	Definujeme strukturu BRIDGE (7-50min). Tady máme 4 cesty, kudy projít, tedy $\{(1,2),(4,5),(1,3,5),(4,3,2)\}$. Z toho můžeme udělat $\varphi(\textbf{x})$. Poměrně jednoduše se dá udělat i diagram řezů.
+\end{corollary}
+
+\begin{theorem}[Pivotální rozklad]
+	Mějme systém $S$ o $n$ komponentách. Pak můžeme $\varphi(\textbf{x})$ rozepsat jako $\varphi(\textbf{x})=x_i\varphi(1_i,\textbf{x}_{-i})+(1-x_i)\varphi(\textbf{x}_{-i})$, kde fixujeme, že $i$-tý prvek funguje/nefunguje. Tento rozklad se může použít rekurentně až do $\varphi(\textbf{x})=\sum_{\textbf{y}}\prod_{j=1}^n x_j^{y_j}(1-x_j)^{1-y_j}\varphi(\textbf{y})$, kde $\textbf{y}$ jsou $n$-rozměrné binární vektory, kterých je $2^n$.
+\end{theorem}
+
+Toto se hodí např. pro BRIDGE, kde je ideální udělat rozklad podle prvku 3. Potom dostaneme 
+$$ \varphi(\textbf{x})=x_3\varphi(1_3,\textbf{x}_{-3})+(1-x_3)\varphi(0_3,\textbf{x}_{-3}). $$
+Tím se výrazně zjednoduší struktura systému.
+
+\begin{define}[Strukturní důležitost komponent]
+	Stavový vektor $(1_i,\textbf{x})$ se nazývá \textbf{kritická cesta/vektor pro $i$-tou komponentu}, pokud $\varphi(1_i,\textbf{x})=1\wedge \varphi(0_i,\textbf{x})=0 $, tzn. $\varphi(1_i,\textbf{x})-\varphi(0_i,\textbf{x})=1$.
+\end{define}
