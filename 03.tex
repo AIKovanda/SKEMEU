@@ -45,9 +45,58 @@ $$ \varphi(\textbf{x})=1-\prod_{i=1}^{n}(1-x_i)\equal{ozn}=\bigsqcup_1^n x_i=\ma
 \end{theorem}
 
 Toto se hodí např. pro BRIDGE, kde je ideální udělat rozklad podle prvku 3. Potom dostaneme 
-$$ \varphi(\textbf{x})=x_3\varphi(1_3,\textbf{x}_{-3})+(1-x_3)\varphi(0_3,\textbf{x}_{-3}). $$
+$$ \varphi(\textbf{x})=x_3\varphi(1_3,\textbf{x}_{-3})+(1-x_3)\varphi(0_3,\textbf{x}_{-3}). $$ 
 Tím se výrazně zjednoduší struktura systému.
 
 \begin{define}[Strukturní důležitost komponent]
 	Stavový vektor $(1_i,\textbf{x})$ se nazývá \textbf{kritická cesta/vektor pro $i$-tou komponentu}, pokud $\varphi(1_i,\textbf{x})=1\wedge \varphi(0_i,\textbf{x})=0 $, tzn. $\varphi(1_i,\textbf{x})-\varphi(0_i,\textbf{x})=1$.
+	
+	Označme $\nu_\varphi(i)=\sum_{(\cdot_i,\textbf{x}_{-i})} \varphi(1_i,\textbf{x})-\varphi(0_i,\textbf{x})=1$ počet kritických vektorů pro $i$-tou komponentu.
+	
+	Číslo $B_\varphi(i)=\frac{\nu_\varphi(i)}{2^{n-1}}$ nazveme \textbf{Birmbaumova míra (strukturní) důležitosti} $i$-té komponenty v $S$.
 \end{define}
+
+\begin{example}
+	1 a sérii s paralelní 2 a 3. Pak dostaneme
+	$$\begin{array}{c|c}
+		(\cdot,x_2,x_3) & \varphi(1_i,\textbf{x})-\varphi(0_i,\textbf{x})=1 \\\hline
+		\cdot\,00 & 0 \\
+		\cdot\,01 & 1 \\
+		\cdot\,10 & 1 \\
+		\cdot\,11 & 1 
+	\end{array}.$$
+	Jelikož $2^{n-1}=4$, pak $\nu_\varphi(1)=3$, takže $B_\varphi(1)=\frac{3}{4}$ apod.
+	
+\end{example}
+
+
+\begin{define}
+	$i$-tá komponenta se nazývá \textbf{irelevantní}, pokud $\varphi(1_i,\textbf{x})=\varphi(0_i,\textbf{x})$, $\forall\textbf{x}_{-i}$. Tedy že na jejím vypnutí/zapnutí nezáleží. Příkladem je záznamové zařízení při požárním poplachu, které je sice důležité, ale na samotný poplach nemá vliv.
+\end{define}
+
+\begin{define}
+	Systém komponent se nazývá \textbf{koherentní}, pokud neobsahuje irelevantní komponentyf a strukturní funkce je neklesající v každé své proměnné.
+\end{define}
+
+\begin{theorem}
+	Pro $S$ koherentní platí, že $\varphi(\textbf{0})=0$, $\varphi(\textbf{1})=1$ a $$ \prod_{i=1}^n x_i\leq \varphi(\textbf{x})\leq \bigsqcup_{i=1}^n x_i. $$
+\end{theorem}
+
+\begin{corollary}
+	Pro výpočet $R_S(t)$ využijeme čas $t$ a ztotožníme poruchovostní komponenty $X_i(t)=\begin{cases}
+1,&\text{s pravděpodobností }p_i=\PP(T_i>t),\\0,&\text{jinak.}
+\end{cases}$ Dosazením do strukturní funkce potom vyrobíme $\varphi\big(\textbf{X}(t)\big)$, kde $\textbf{X}(t)$ je vektor veličin $X_i(t)$, které charakterizují funkčnost/nefunkčnost komponenty v čase $t$. Potom
+$$ R_S(t)=\PP(T_S>t)=\PP\big(\varphi\big(\textbf{X}(t)\big)=1\big)=1\cdot\PP\big(\varphi\big(\textbf{X}(t)\big)=1\big)+0\cdot\PP\big(\varphi\big(\textbf{X}(t)\big)=0\big)=\EE{\varphi\big(\textbf{X}(t)\big)}. $$
+\end{corollary}
+
+\begin{example}
+	Pro sériově zapojený $S$ dostaneme
+	$$ R_S(t)=\E \varphi\big(\textbf{X}(t)\big)\equal{id}\prod_{i=1}^n \E X_i(t)=\prod_{i=1}^n R_i(t)=\prod_{i=1}^n \e{-\int_{0}^{t}\lambda_i(\tilde{t})\d\tilde{t}}=\e{-\int\limits_{0}^t\sumin \lambda_i(\tilde{t})\d\tilde{t}}, $$
+	kde $\sumin \lambda_i(\tilde{t})\d\tilde{t}=\lambda_S(\tilde{t})$. Z toho vyplývá, že např. pro 100 komponent o $R_i(t)=0.995$ dostaneme systém o spolehlivosti $R_s(t)=0.606$. Sériové systémy jsou tedy nejhorší možné, co se týče spolehlivosti. 
+\end{example}
+
+\begin{example}
+	Pomocí tří imaginárních komponent (DFR,CFR,IFR) jde modelovat fyzická (reálná) komponenta s vanovitým průběhem FR. U paraleltních součástí máme naopak 
+	$$ R_S(t)=\E\varphi\big(\textbf{X}(t)\big)=\E\Big[\bigsqcup_{i=1}^n X_i(t)\Big]=\E\Big[1-\prod_{i=1}^n(1-X_i(t))\Big]\equal{id}1-\prod_{i=1}\big(1-R_i(t)\big)=\bigsqcup_{i=1}^n R_i(t). $$
+\end{example}
+
