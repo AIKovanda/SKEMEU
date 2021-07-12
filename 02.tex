@@ -60,41 +60,7 @@ Dále se může použít například Weibull Probability Plot. Pokud totiž $T\s
 
 % lecture 6
 
-\begin{define}[TTT transformace]
-	Mějme veličinu $T\sim F$ takovou, že $\mu<+\infty$. Definujeme TTT transformaci vztahem $$ \HF(v)=\int_{0}^{F^{-1}(v)}\big(1-\RT(t)\big)\d t,\quad v\in[0,1],\quad F^{-1}(0)=0,\quad F^{-1}(1)=x_F,$$
-	kde $x_F$ je pravý krajní bod rozdělení $F$. Definujeme dále škálovanou TTT transformaci jako $\phi_F(v)=\frac{\HF(v)}{\mu}$.
-\end{define}
+\
 
-% lecture 6
 
-\begin{theorem}
-	Mějme $F$ spojitou a ostře rostoucí. Pak pro $\forall t\in\big(0,F^{-1}(1)\big)$ platí, že $$\HF\big(F(t)\big)=\frac{1}{r_T(t)}.$$
-\end{theorem}
 
-\begin{define}[Empirická TTT transformace]
-	Pro $\textbf{T}:=(T_1,...,T_n)~iid~F$ definujeme \textbf{Empirickou TTT transformaci} jako
-	$$ H_n^{-1}(v):=\int_{0}^{F_n^{-1}(v)}\big(1-F_n(t)\big)\d t,\quad \phi_n(v)=\frac{H_n^{-1}(v)}{H_n^{-1}(1)}. $$
-	Platí, že $\inv{H_n}\rightrightarrows \inv{H_F}(v)$.
-\end{define}
-
-\begin{define}[TTT plot]
-	Definujeme \textbf{TTT plot} jako graf $\Big\{\frac{i}{n},\phi_n\big(\frac{i}{n}\big)\Big\}_0^n$.
-\end{define}
-
-TTT plot se tak jmenuje, protože $\inv{H_n}\big(\frac{i}{n}\equal{...}\frac{1}{n}\Big[\sum_{j=1}^i t_{(j)}+(n-i)t_{(i)}\Big]$, kde obsahu hranaté závorky se říká \textbf{Total test in time} v bodě $t_{(i)}$ (od $i$-té součástky počítáme pouze $t_{(i)}$, protože všechny byly v testu po dobu $t_{(i)}$). Test nutně nemusí skončit v době poruchy některé součástky, a tedy můžeme zavést symbol $\tau(t):=\sum_{j=1}^it_{(j)}+(n-i)t$, kde $T_{(i)}<t<T_{(i+1)}$.
-
-\subsection{Preventivní údržba}
-Představme si třeba převodovku automobilu, kde jedna z komponent, klínový řemen, sice stojí pár korun ($c$), ale porucha řemene kompletně zničí celou převodovku, což se může prodražit ($k$). V této části se tedy pokusíme optimalizovat maintenance policy tak, aby se snížily náklady na provoz automobilu. Ještě vyšší potřeba je kontrola komponent u jaderných elektráren, kde je potřeba dělat odstávky a vyměnit všechny potřebné součásti tak, aby se minimalizovala pravděpodobnost havárie.
-
-Celkové náklady v čase $t$ se tedy spočítají jako $\sum_{\text{plán}}c+\sum_{\text{poruchy}}(c+k)$. Střední náklady na výměnnou periodu jsou tedy rovny $c+k\PP(Tyleq t_0)$. Definujeme \textbf{střední náklady za jednotku času} $C_A(t_0)=\frac{c+k\PP(T\leq t_0)}{\mathrm{MTBR}(t_0)}$ pro Mean Time Before Replacement ve tvaru \[
-\begin{split}
-\mathrm{MTBR}(t_0)&=\E\bigg(Z(T)=\begin{cases}
-T,& T\leq t_0,\\ t_0,& T>t_0
-\end{cases}\bigg)=\int_{0}^{t_0}tf_T\d t+\int_{t_0}^{+\infty}t_0 f_T(t)\d t\equal{...} \\ &= \int_{0}^{t_0\stackrel{!}{=}\inv{F}(v_0)}\big(1-F(t)\big)\d t=\HF(v_0) 
-\end{split}
-\]  a chceme $t_0$ optimalizovat tak, aby se minimalizovala veličina $$C_A(v_0)=\frac{c+k\overbrace{F(t_0)}^{v_0}}{\HF(v_0)}=\frac{1}{\mu}\frac{c+kv_0}{\phi_F(v_0)}.$$
-
-Po derivaci úpravou dostaneme 
-$$ \frac{\phi_F'}{\phi_F}=(\ln \phi_F)'=\frac{k}{c+kv_0}.$$
-
-Vyřešením této diferenciální rovnice dostaneme optimální $v_0$ (ne vždy ale máme $\phi_F$ a jsou tam i další problémy).

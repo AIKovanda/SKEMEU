@@ -1,5 +1,238 @@
 \chapter{[SKE] Odhady spolehlivosti a kumulativní intenzity poruch, typy cenzorování, testy.}
 
 
+\subsubsection{Pararelní systém n-komponentní}
+$$T_S = \max{\big(T_j\big)_{i=1}^n} =  M_n$$\\
+$$R_S(t)\equal{id} 1 -  \prod_{j=1}^n R_j(t) \equal{iid}  1 - \big(1 -R_T(t) \big)^n$$ \\
+$$\FF_S(t) \equal{iid} \big(\FF_T(t)\big)^n$$
 
+Můžeme formulovat obdobnou větu jako pro sériový systém.
 
+\begin{theorem}
+	Nechť $T \sim f_T(t) = o\Big(\e{-\beta\abs{t}} \Big)$ při $t \rightarrow \infty$, ale není useknuté zprava. Pak 
+	$$M_n  \Dto Y  ,$$ kde
+	pro distribuční funkci náhodné veličiny $Y$ platí
+	
+	$$ \FF_Y(t)  = 1 - \e{-\exp(\frac{t-\vartheta}{\alpha} )},~~t \in \R, \vartheta \in \R, \alpha \in\R^+.  $$
+\end{theorem}
+
+\subsection{Model konkurenčních rizik, Competing risks}
+Nechť je $T$ doba do poruchy. Ta může nastat z různých příčin, označme je jako $\delta \in \lbrace1,2,\dots k \rbrace$. Máme tedy $k$ módů rizika/poruchy, které soutěží o vyřazení komponenty - proto Competing risks. Široká škála využití v praxi, například demografie, či sociologie. 
+\begin{example}
+	Pro představu uveďme několik příkladů. $T$ může být například doba trvání manželství, nezaměstnanosti nebo nemoci. V ekonomii se může jednat o dobu do krachu firmy. Ve stavitelství se můžeme bavit o době do pádu určitého mostu, atd.	
+\end{example}
+Reprezentujme to pomocí dvojce $(T, \delta)$, kde jsou oba prvky náhodnými veličinami, navíc $T \geq 0$ a $\delta\in\hat{k}$. Tato dvojce má sdruženou distribuční funkci $(T, \delta) \sim \FF_{T,\delta}(t,d)$, kde $t\in\R, d\in \R$. Tato distribuční funkce je ovšem v $d$ diskrétní, čili v proměnné $d$ se nachází skoky. Nyní $\FF_{T,\delta}(t,d)$ charakterizujme pomocí subdistribucí.
+$$R(t,j) = \PP(T > t, j)~~t \in \R, ~~j \in \hat{k}$$ 
+$$p_j = \PP(\delta = j) = R(0,j), ~~\sum_{k=1}^n p_k = 1$$ 
+Budeme potřebovat také subhustoty, které definujeme předpisem $f(t,j)=R'(t,j)$. Pomocí tohoto objektu lze určit hustota marginální hustota pro $T$, či disitribuční a spolehlivostní funkce.
+$$f_T(t) = \sum_{i = 1}^{n}f(t,j)$$
+$$\FF_T(t) = \int_{-\infty}^{t} \sum_{j=1}^n f(y,j)\d y = \sum_{j=1}^n \FF(t,j)  $$
+$$R_T(t) = \int_{t}^{\infty} \FF(y,j) \d y = \sum_{j=1}^n R(t,j) $$
+$$r_T(t) = \frac{f_T}{R_T} = \sum_{j=1}^n\frac{f(t,j)}{R_T} = \sum_{j=1}^n r_T(t,j) $$
+Můžeme definovat také relativní intenzitu poruch $j$-tého módu rizika $\frac{r_T(t,j)}{r_T(t)}$.
+Pokračujme definováním dalších veličin.
+$$ R_T(t|j) = \PP(T > t|\delta =j) = \frac{\PP(T > t, \delta =j)}{\PP(\delta =j)} = \frac{R(t,j)}{p_j} $$
+$$R_T(t) = \sum_{j=1}R(t,j) = \sum_{j=1}p_j R_T(t|j)$$
+V poslední rovnosti jsme získáli $R_T(t)$ jako konvexní směs podmíněných distribucí. Povšivněme si však, že jsme nikde nepředpokládali vzájemnou nezávislost konkurenčních rizik. Tyto vztahy platí i v přípádě, že jednotlivé módy rizika jsou na sobě závíslé.
+\subsection{LIFE-TIME aplikace}
+Budeme využívat tzv. \emph{Censoring} dat. Censorovat data můžeme několika způsoby.
+
+\paragraph{Censorování typu I.} Experiment ukončíme v čace $t_c$. Data jsou tvaru $T_{(1)},T_{(2)},\dots, T_{(r)} \leq t_c$, přičemž máme informaci, že $T_{(r+1)},T_{(r+2)},\dots, T_{(n)} \geq t_c$. Lze zapsat také následovně 
+
+$$W_j = \min(T_j,t_c) = \begin{cases}
+	T_j,& T_j\leq t_c,\\ t_c,& otherwise
+\end{cases}, ~~\delta_j = I\lbrace T_j \leq t_c \rbrace = \begin{cases}
+	1\\ 
+	0
+\end{cases}$$. \\
+V následující větě se podíváme jak se dá sestrojit vztah pro hustotu pravděpodobnosti prvních $r$ uspořádaných statistik, včetně $r$, které je náhodné.
+\begin{theorem}
+	Nechť $T_1, T_2, \dots, T_n$ jsou i.i.d. s příslušnou distribuční funkcí $\FF$ či hustotou $f$. Označme $T_{(1)} < T_{(2)} < \cdots <T_{(r)}$, kde $r\in\hat{n}$. Pak $$f(t_1, t_2, \dots, t_n| r) = \frac{n!}{(n-r)!}\Big(\prod_{j=1}^r f(t_{(j)})\Big)R(t_c)^{n-r}, ~~ \forall t_{(1)} < t_{(2)} < \cdots <t_{(r)} \leq t_c $$ 
+	a navíc
+	$$f(t_1, t_2, \dots, t_n r) = \frac{r!}{\FF^r(t_c)}\prod_{j=1}^r f(t_{(j)}) = r! \prod_{j=1}^r  \frac{f(t_{(j)})}{\FF(t_{c})}, ~~ t_{(j)} \leq t_c$$ 
+\end{theorem}
+
+\paragraph{Censorování typu II.}
+Také se jinak nazývá censorování poruchou. V tomto typu censoringu volíme $r$ pevně a čas experimentu (zde označme $t_{\mathrm{exp}} = t_{(r)}$) je náhodná veličina. Data pak vypadají takto: 
+$$W_j = \min(T_j, t_{(r)})_{j=1}^n = \begin{cases}
+	T_j,& T_j\leq t_{(r)},\\ t_{(r)},& otherwise
+\end{cases},~~\delta_j = I\lbrace T_j \leq t_{(r)} \rbrace = \begin{cases}
+	1\\ 
+	0
+\end{cases}
+$$
+I zde můžeme formulovat podobnou větu, jako v případě Censoringu typu I.
+\begin{theorem}
+	Nechť $T_1, T_2, \dots, T_n$ jsou i.i.d. s příslušnou distribuční funkcí $\FF$ či hustotou $f$. Označme $T_{(1)} < T_{(2)} < \cdots <T_{(r)}$, kde $r\in\hat{n}$. 
+	Pak $$f(t_1, t_2, \dots, t_n| r) = \frac{n!}{(n-r)!}\Big(\prod_{j=1}^r f(t_{(j)})\Big)R(t_{(r)})^{n-r}, ~~ \forall t_{(1)} < t_{(2)} < \cdots <t_{(r)} \leq t_c $$ 
+	
+\end{theorem}
+\paragraph{Censorování typu III.}
+Kombinace přechozích dvou censorování, tedy nastavíme pevně čas experimentu $t_c$ a také nastavíme pevně $r$.
+%lecture 10
+\paragraph{Random censoring, RC.}
+Máme opět čas do poruchy $T$, navíc máme ovšem další náhodnou veličinu $C$, kterou nazveme časový cenzor. Oěb tyto veličiny jsou výájemně nezávislé. Distribuční funkce těchto náhodných veličin jsou pro jasnost $\FF_T$ a $\FF_C$. Časový cenzor realizuje censorování každé jednotlivé časové hodnoty. Data v tomto případě zapisujeme ve tvaru
+
+$$W = \min(T,C), ~~\delta_j = I\lbrace T \leq C \rbrace = \begin{cases}
+	1& T\leq C,\\0& T > C 
+\end{cases}
+$$
+Čímž dostáváme opět spojitě diskrétní rozdělení pro dvojici
+$(W,\delta)$ v modelu konkurenčních rizik. Tím máme hotový setup modelu. Podívejme se jak vypadá střední hodnota
+$$q = \EE{\delta} =  \EE{I\lbrace T \leq C \rbrace} = \int_{\lbrace T \leq C \rbrace}1\d\PP = \PP(T\leq C)\equal{id} = \iint_{t\leq c}\d\FF_T\d\FF_C = \iint_{t\leq c}f_Tf_C  \d t \d c$$
+Víme-li, že máme k dispozici $n$ pozorování, potom číslo $n\cdot q$ značí střední počet poruch v $n$-tici opakování. \\
+Zaznamenáváme $T_j, C_j$, což vede na data ve tvaru $(W_j,\delta_j)_{j=1}^n$. Dále označme $D$ množinu indexů, kdy opravdu došlo k poruše, čili $$D = \lbrace j\in \hat{n}: \delta_j =1 \rbrace .$$ Často nazývána také jako množina defektů. Mohutnost množiny $\abs{D} = \# D = \delta = \sum_{j=1}^n\delta_j$, tedy počet poruch v $n$-tici. Tímto censoringu se budeme zejména zabývat.
+\begin{remark}
+	Spolehlivostní funkci $R_T(t)$ v klinických testech většinou značíme jako $S_T(t)$ a je známa pod názvem Survival function. 	
+\end{remark} 
+\paragraph{Random censoring zleva.}
+Představme si situaci, kdy doktor musí určit diagnózu, sleduje pacienty, přičemž při již probíhajících testech přijde další pacient. Doktor ho tudíž nesleduje od úplného začátku, ale sleduje ho až od nějakého času $t_{l}$. Někdy známo také jako oboustranné censorování.
+\paragraph{RC + censoring typu I.}
+Pracujeme ze živými objekty, které můžou být censorované, ovšem může se stát, že na experiment není dostatek času nebo financí a tudíž musí být experiment ukončen v pevném čase $t_{c}$. Je to tedy smíčené censorování.\\
+Setup: $$T, C, t_c \longrightarrow W =\min(T,C,t_c), \delta =  \begin{cases}
+	1 \\0\\2 \end{cases} \longrightarrow (W,\delta).$$
+\paragraph{RC s neúplnou informací.}
+Jedná se o běžný RC, avšak nedokážeme zaznamenat poruchu v tom čase, kdy skutečně nastala. O poruše se dozvíme až na konci celého experimentu. Například pacient onemocnění, ale nepříjde k doktorovi, porucha tudíž skutečně nastala, ale neoznámí to v tom čase, kdy skutečně nastala. Po skončení experimentu doktor obvolá pacienty, že se končí s experiemntem a až v tom okamžiku mu pacient řekne, že onemocněl (wtf?).\\
+Máme tedy jistou pravděpodobnost $p$, že porucha nebyla azchycena a je dostupná až po skončení po experimentu.
+\paragraph{Další a další kombinace.}
+\subsubsection{Výpočty v RC modelech.}
+Začneme větou, kteoru nám prozradí, jak vypadá sdružená hustota veličiny $(W, \delta)$.
+\begin{theorem}
+	$W$ je náhodná veličina vzhledem k běžné spojité Lebesgueově míře $\lambda$ a náhodná veličina $\delta$ je náhodná veličina vzhledem k čítací míře $\kappa$. Dále jsou $T$ a $C$ nezávislé, přičemž máme k dispozici $f_T$ a $f_C$. Pak platí
+	$$f(w,\delta) =  \Big[f_T(w)(1-F_C(w))\Big] ^{\delta}\Big[f_C(w)(1-F_T(w)) \Big]^{1-\delta}$$
+	pro $\forall \delta\in\lbrace 0,1\rbrace$ a $\forall w\in\R^{+}$ vzhledem k součinové míře $\lambda \times \kappa$.
+\end{theorem}
+
+\begin{dusl}
+	$\FF_T = \FF_T(t,\boldsymbol{\theta}_1)$ a $\FF_C = \FF_C(c,\boldsymbol{\theta}_2)$ a nechť $\boldsymbol{\theta}_1$ a $\boldsymbol{\theta}_2$ nejsou provázány. Navíc máme $(W_j,\delta_j)_{j=1}^n$ i.i.d. s distribuční funkcí $F_{W,\delta}$. Pak věrohodnostní funkce
+	$$L(\boldsymbol{\theta_1}, \boldsymbol{\theta_2}) = L_1(\boldsymbol{\theta_1})L_2(\boldsymbol{\theta_2}) = \Big[\prod_{j\in D }f_T\prod_{j \in \hat{n}\smallsetminus D}(1-F_T)\Big]\cdot\Big[\prod_{j\in D }(1-F_C)\prod_{j \in \hat{n}\smallsetminus D}f_C\Big]$$
+\end{dusl}
+\begin{example}
+	$T \sim \Exp(\lambda), C\sim  \FF_C(\boldsymbol{\theta_2})$. Pro jednodušší zápis označme $\hat{n}\smallsetminus D = U$ a připomeňme, že $\delta = \abs{D}$.  Potom věrohodnostní funkce
+	$$L_1(\lambda) =\prod_{j\in D }f_T(w_j)\prod_{j \in U}R_T(w_j) = \prod_{j\in D }\lambda\e{-\lambda w_j}\prod_{j \in U}\e{-\lambda w_j} = \lambda^{\delta}\e{-\lambda\sum_{i=1}^n w_i}.$$ Provedeme maximální věrohnodný odhad
+	$$l_1(\lambda) = \log(L_1(\lambda)) = \delta\ln(\lambda) - \lambda \sum_{i=1}^n w_i$$
+	Derivace, položení rovno 0 a po úpravě dostaneme výsledek ve tvaru
+	$$\hat{\lambda}_{ML} = \frac{\sum_{j=1}^n \delta_j}{\sum_{i=1}^n w_i} = \frac{\bar{\delta}_n}{\bar{w}_n}.$$
+	Obdobně můžeme určit také Bayesovský odhad, kde pro $\lambda$ předpokládáme apriorní rozdělení $\lambda\sim \pi(\lambda)$. Vezněme například rozdělení z Conjugated Family exponenciálního rozdělení -- $\pi(\lambda) \sim \Gamma(a,b)$. Potom pro aposteriorní hustotu dostaneme, přičemž opět pro jednoduchost označme $\sum_{i=1}^n w_i  =w$.
+	$$\pi(\lambda|(\boldsymbol{w},\boldsymbol{\delta})) = \frac{L(\lambda,\boldsymbol{\theta_2}) \pi(\lambda)}{\int L(\lambda,\boldsymbol{\theta_2}) \pi(\lambda)\d \lambda} = \frac{L_1(\lambda)L_2(\boldsymbol{\theta_2}) \pi(\lambda)}{\int L_1(\lambda)L_2(\boldsymbol{\theta_2}) \pi(\lambda)\d \lambda} \sim \Gamma(w+b,\delta+a)$$
+	Můžeme tak určit
+	$$\hat{\lambda}_{B} = \EE{\pi(\lambda|(\boldsymbol{w},\boldsymbol{\delta}))} = \frac{a+\delta}{w+b} = \frac{\bar{\delta}_n + \frac{a}{n}}{\bar{w}_n + \frac{b}{n}}$$
+	Vlastnosti $\hat{\boldsymbol{\theta}}_1$ závisí na $\boldsymbol{\theta}_2$!
+\end{example}
+\begin{theorem}
+	Přibližné rozdělení časového cenzoru $C$ je
+	$$ \sqrt{n}\Big(\hat{\lambda}_{ML} - \lambda \Big) \Dto \NN\Big(0, \frac{\lambda^2}{\PP(T \leq C)}\Big)$$
+\end{theorem}
+Odhady $\hat{\lambda}_{B}$ a $\hat{\lambda}_{ML}$ jsou konzistentní a $\AN$. Naším cílem není ovšem odhadovat parametry. My chceme získat $R_T(t)$ případně $r_T(t)$ při náhodném censoringu. Díky invarianci MLE s tím není problém, například pro exp. rozdělení
+$$ \hat{R}_{ML}(t) = R(t, \hat{\bt}_{1,ML}) = \e{-\hat{\lambda}_{ML} t} = \e{-t\frac{\bar{\delta}_n}{\bar{w}_n}}$$
+$$ \hat{r}_{ML}(t) = \frac{f_T}{R_T} = \frac{\bar{\delta}_n}{\bar{w}_n}.$$
+Kdybychom však chtěli získat $\hat{R}_{B}(t)$, tedy bayesovský odhad, nemůžeme pouze dosadit jako v předchozím případě. Baysevský odhad totiž není invariantní. Obdobně platí pro $r_B(t)$.
+$$\hat{R}_{B}(t) \neq  R(t, \hat{\bt}_{1,B})$$
+
+%lecture 12
+\begin{define}
+	Mějmě $T\sim \FF_T$ a $C\sim \FF_C$ nezávislé, kde $W = \min(T,C)$ a $\delta = I\lbrace T \leq C \rbrace$. Koziol-Greenův model RC nastává tehdy, pokud existuje konstanta $\gamma >0$, taková že $R_C(t) = (R_T(t))^{\gamma}$ pro $\forall t$. 
+\end{define}
+
+\subsection{Extreme value models v teorii spolehlivosti}
+
+\subsubsection{Sériový systém n-komponentní}
+$$T_S = \min{\big(T_j\big)_{i=1}^n} = T_{(1)} = U_n$$\\
+$$R_S(t)\equal{id} \prod_{j=1}^n R_j(t) \equal{iid} \big(R_T(t) \big)^n$$ \\
+$$\FF_S(t) \equal{iid} 1 - \big(1-\FF_T(t)\big)^n$$
+Pokud by například byla $F_T(t)$ distribuční funkce Gaussova rozdělení, veliuce těžko by se nám s tím pracovalo. Navíc většinou $F_T(t)$ dané komponenty ani neznáme a musíme je odhadovat. To můžeme buď z dat a získáme $\hat{F_T}$ (případně $\hat{R_T}$), a nebo použijeme asymptotiku - tedy $F_S \sim AG $
+\begin{example}
+	Označme $Y_n =nF_T(U_n)$, potom pro $\forall y>0$
+	$$\PP(Y_n \leq y) = \PP(n\FF_T(U_n)\leq y) =  \PP\Big(U_n\leq F^{-1}_T\Big(\frac{y}{n}\Big)\Big) = F_{U_n}\Big(\FF^{-1}_T\Big(\frac{y}{n}\Big)\Big) = 1 - \Big(1-\FF^{-1}_T\Big(\frac{y}{n}\Big)\Big)^n  = 1 - \Big(1-\frac{y}{n}\Big)^n$$ 
+	což pro $n\rightarrow \infty$ konverguje k distribuční funkci exponenciálního rozdělení s parametrem $\lambda = 1$, tedy $1 - e^y$. 
+\end{example}
+Tento příklad posloužil k demonstraci toho, proč funguje následující věta.
+\begin{theorem}
+	Nechť $T \sim f_T(t) = o\Big(\e{-\beta\abs{t}} \Big)$ při $t \rightarrow \infty$, ale není useknuté zleva. Pak 
+	$$U_n = T_{(1)} = \min{\big(T_j\big)_{i=1}^n}  \Dto Y  ,$$ kde
+	pro distribuční funkci náhodné veličiny $Y$ platí
+	
+	$$ \FF_Y(t)  = 1 - \e{-\exp(\frac{t-\vartheta}{\alpha} )},~~t \in \R, \vartheta \in \R, \alpha \in\R^+.  $$
+	a je známo jako Gumbelovo rozdělení, nebo také Extreme Value Distribution (EVD) typu I.
+\end{theorem}
+
+\begin{theorem}[Koziol-Green, 1992]
+	Koziolův-Greenův model nastává právě tehdy když $W$ a $\delta$ jsou nezávislé náhodné veličiny.
+\end{theorem}
+Poďme se nyní podívat jak vypadá intenzita poruch pro Koziolův-Greenův model
+$$ R_C = (R_T(t))^{\gamma} \implies f_C(t) = -R'_C(t) = \gamma f_T(t)(R_T(t))^{\gamma-1}$$
+$$r_C(t) =\frac{f_C}{R_T}=\frac{\gamma f_T(t)(R_T(t))^{\gamma-1}}{(R_T(t))^{\gamma}} = \gamma \frac{f_T}{R_T} = \gamma r_T(t) \implies r_T(t) = \frac{r_C(t)}{\gamma}$$
+Jedná se o speciální případ obecného modelu proporcionálních rizik. Model proporcionálních rizik je také často nazýván Coxovým modelem, či Lehmannovou rodinou.  Uvidíme později.
+\subsection{Odhady}
+\paragraph{RC neparametricky}
+Jak odhadneme spolehlivostní funkci neparametricky, se dozvíme v této kapitolce. Na začátek je potřeba určit setup. Jako v přechozích případech máme $T$, $C$, $W=\min(T,C)=T^{*}$. Hvězdičku ale budeme vynechávat, protože bychom se uhvězdičkovali. Naměříme experiment s nějakými censorovanými daty, máme tudíž $(W_j,\delta_j)_{j=1}^n$, plnohodnotně ovšem stačí psát $(T_j,\delta_j)_{j=1}^n$. Dále potřebujeme upořádaný výběr $(T_{(j)}, \delta_{(j)}){j=1}^n$, přičemž uspořádání je podle první souřadnice, tedy $T_{(j)} < T_{(j+1)} \forall j$. 
+Množinu defektů $D$ již máme zavedenou, zde však potřebujeme $D_t =\lbrace j:\delta_{(j)}=1 ~\&~ t_{(j)} < t \rbrace$. Následuje risk set $\mathfrak{R}(t)$, který je definován zápisem $\mathfrak{R}(t) =\lbrace j: t_{(j)} \geq t \rbrace$. Jsou to vlastně indexy těch objektů v experimentu, které ještě nebyly zcensorovány, a které stále fungují a z experimentu nevypadly. Počet prvků $\mathfrak{R}(t)$ označme jako $n_j =\#\mathfrak{R}(t)$.
+\begin{define}[Kaplanův-Meierův odhad $R_T$, 1958]
+	Kaplanův-Meierův odhad spolehlivostní funkce je roven 
+	$$\hat{R}_{KM}(t) = \prod_{j\in D_t} \frac{n_j -1}{n_j} = \prod_{j\in \hat{n}} \hat{p}_j = \prod_{j\in D_t} \frac{n-j}{n-j+1},~~~~ \hat{p}_j = \begin{cases}
+		\frac{n_j - 1}{n_j},& j\in D_t \\1, & j\notin D_t \end{cases}. $$
+\end{define}
+Dá se vykreslit také Kaplan-Meier plot $$ \lbrace t_{(j)}, \hat{R}_{KM}(t_{(j)}) \rbrace_{j=1}^n .$$ Pokusme se nyní Kaplan-Meierův odhad odvodit.
+Interval $(0,t),~t>0$ rozdělme pomocí bodů $u_0, u_1, \dots u_m$ dle obrázku.
+
+$$\Huge{Obrazek~interval}$$
+
+Spolehlivostní funkci $R_T(t)$ tak můžeme pomocí věty o součinové pravděpodobnosti rozepsat následovně
+$$ R_T(t) = \PP(T \geq t) = \underbrace{\PP(T > u_0)}_{\text{=1}} \underbrace{\PP(T > u_1|T>u_0)}_{\text{= $p_{1}$}}\underbrace{\PP(T > u_2|T>u_1)}_{\text{= $p_{2}$}}\cdots\underbrace{\PP(T > t|T>u_m)}_{\text{= $p_{m+1}$}} = \prod_{j=1}^{m+1} p_j.$$
+Předpokládáme navíc, že dělení intervalu $(0,t)$ je tak husté, že v jednom podintervalu $(u_k , u_{k+1})$ může nastat pouze jeden censor, jedna porucha, nebo nic. Nenastávají totiž dublovaná $T$ či $C$. Potom odhad $p_j$ vypadá následovně
+$$\hat{p}_j = \hat{\PP}(T>u_j|T > u_{j-1}) = \begin{cases}
+	1 & \mathrm{nestalo~se~nic}, \\1 & \mathrm{nastal~1~censor}, \\ \frac{n_j -1}{n_j}&  \mathrm{nastala~1~porucha} \end{cases}. $$
+Zmíníme také vlastnosti KM odhadu, přičemž zejména 3. vlasnost je pro nás hodně důležitá.
+\subparagraph{Vlastnosti KM odhadu}
+\begin{enumerate}
+	\item $\hat{R}_{KM}(t)$ je \textbf{neparametrickým} MLE odhadem $R_T(t)$
+	\item $\hat{R}_{KM}(t)$ je \textbf{konzistenntním} odhadem $R_T(t)$
+	\item $\hat{R}_{KM}(t)$ je $\AN\Big(R_T(t), \frac{1}{n}R_T(t)^2 \int_0^t \frac{\d F_u(u)}{(1-H(u))^2} \Big)$, kde $F_u(t) = \PP(T\leq t,\delta=1)$ a $H(t) = \PP(T < t)$
+\end{enumerate}
+\subparagraph{Využití KM odhadu}
+Pomocí KM--plot lze detekovat distribuční rodinu $F_T$. Pomocí $\hat{R}_{KM}(t)$ lze také určit mediánová doba života $\hat{t}_{\mathrm{med}}$ nebo střední doba života $$\widehat{\EE{T}} =\widehat{\MTTF} = \int_0^{\infty} \hat{R}_{KM}(t) \d t .$$ Pro odhad intenzity poruch $\hat{r}_T(t)$ potřebujeme však mít k dispozici například histogramové či jádrové odhady $\hat{f}_T^{(H)} ,\hat{f}_T^{(K)}$. Je to z důvodu toho, že hustota pravdědobnosti stupňovité distribuční funkce Kaplanova-Meirova odhadu je nulová. Nakonec lze pomocí $\hat{R}_{KM}(t)$ navíc také vykreslit QQ--plot, PP--plot, případně TTT--plot.
+\begin{theorem}
+	$\hat{R}_{KM}(t) \sim \AN\Big(R_T(t), \frac{1}{n}R_T(t)^2 \int_0^t \frac{\d F_u(u)}{(1-H(u))^2} \Big)$, kde $H(u) = \PP(T < u)$ a $F_u(u) = \PP(T\leq u,\delta=1)$  budeme aproximovat v bodě $t_{(j)}$. Připravíme si následující odhady:
+	$$ 1 - \hat{H}(t_{(j)}) = 1 -\frac{j}{n} = \frac{n-j}{n}$$
+	$$ 1 - \hat{H}(t_{(j)}^{-}) = 1 -\frac{j-1}{n} = \frac{n-j+1}{n}$$
+	$$ \Big(1 - \hat{H}(t_{(j)})\Big)^2 = \Big(1 - \hat{H}(t_{(j)})\Big)(1 - \hat{H}(t_{(j)}^{-})\Big)$$
+	kde $F_u(u)$ však aproximujeme empiricky. Potom, je-li $n_j = n - j +1$, je asymtotický rozptyl $\hat{R}_{KM}(t)$ ve tvaru
+	$$ \widehat{\mathrm{AsVar}}(\hat{R}_{KM}(t)) = \frac{1}{n}\hat{R}_{KM}(t)^2 \sum_{j\in D_t} \frac{\frac{1}{n}}{\frac{n-j}{n}\frac{n-j+1}{n}} = \hat{R}_{KM}(t)^2 \sum_{j \in D_t} \frac{1}{n_j(n_j -1)}.$$
+\end{theorem}
+Díky odhadu asymptotického rozptylu, který již nezávisí na neznámé distribuci, ale je určený z dat, můžeme získat interval spolehlivosti. Odhad asymptotického rozptylu $\widehat{\mathrm{AsVar}}(\hat{R}_{KM}(t))$ totiž vložíme do 
+$$\hat{R}_{KM}(t) \sim \AN\Big(R_T(t), \hat{R}_{KM}(t)^2 \sum_{j \in D_t} \frac{1}{n_j(n_j -1)} \Big)$$
+a dostaneme interval spolehlivosti pomocí kvantilu normálního rozdělení $u_{1-\frac{\alpha}{2}}$ pro $R_T(t)$ pomocí odhadu $\hat{R}_{KM}(t)$. Jedná se o tzv. \textbf{Greenwoodovu formuli}.\\
+Dá se odhadnout navíc i kumulativní intenzita poruch $\hat{\Lambda}_T(t)
+:$
+$$\hat{\Lambda}_{KM}(t)\equal{MLE~inv.} = -\ln \hat{R}_{KM}(t) = -\ln \prod_{j\in D_t} \hat{p}_j = - \sum_{j \in D_t} \ln\Big(1 - \frac{1}{n_j}\Big)$$
+Dále využijeme rozvoje logaritmu $\ln(1-x) = -\Big(x + \frac{x^2}{2} +\frac{x^3}{3}+\dots\Big)$
+a dostaneme 
+$$ \hat{\Lambda}_{KM}(t) = - \sum_{j \in D_t} \ln\Big(1 - \frac{1}{n_j}\Big) = \sum_{j \in D_t} \Big(\frac{1}{n_j} + \frac{1}{2n_j^2} + \frac{1}{3n_j^3} + \dots \Big).$$
+Po zanedbání všech členů kroěm prvního dostaneme \textbf{Nelsonův--Aalenův} odhad kumulativní intenzity poruch 
+$$\hat{\Lambda}_{NA}(t)  =\sum_{j\in D_t} \frac{1}{n_j} = \sum_{j \in D_t} \frac{1}{n-j+1}.$$
+Díky tomuto odhad tak můžeme pokračovat v určení spolehlivostní funkce 
+$$ \hat{R}_{NA}(t) =\e{-\hat{\Lambda}_{NA}(t)}. $$
+\begin{remark}
+	Přestože se může zdát, že se jedná o příliš hrubou aproximaci, bylo zjištěno. že MSE $\hat{R}_{NA}(t)$ může být v některých případech lepší než MSE $\hat{R}_{KM}(t)$.
+\end{remark}
+\begin{define}
+	Graf $\lbrace t_{(j)}, \hat{\Lambda}_{NA}(t) \rbrace_{j\in D}$ nazveme Nelsonovým-Aalenovým plotem. 
+\end{define}
+\paragraph{Fitování SKE modelu} Máme k dispozici RC data $(t_{(j)}, \delta_{(j)})_{j=1}^n$
+\begin{enumerate}
+	\item Zvolíme rozdělení $\FF$, například $\Weib(\alpha, \lambda)$
+	\item Určíme odhady $\hat{\alpha}, \hat{\lambda}$ např. MLE, ale pozor! vše pro RC $\longrightarrow \Weib(\hat{\alpha},\hat{\lambda} )$
+	\item Vykřeslíme spojitou křivku $\hat{\Lambda}_W$ našeho odhadnutého Weibulovského modelu
+	\item Do stejného plotu vykreslíme $\hat{\Lambda}_{NA}(t)$ (případně $\hat{\Lambda}_{KM}(t)$)a porovnáme
+\end{enumerate}
+\paragraph{Log--Rank Test}
+Test homogenity rozložení dat 
+$$\hypothesis{R_1(t) = R_2(t)}{R_1(t) \neq R_2(t)}$$
+kde $R_1(t)$ může být spolehlivostní funcke pacientů s placebem a $R_2(t)$ totéž akorát pro pacienty s lékem. Test vedoucí na $\chi^2(1)$. Kdyby se testovalo $I$ skupin, pak by test vedl na $\chi^2(I-1)$.
+\paragraph{Log--Log R plot}
+\begin{define}
+	Graf $\lbrace t, -\ln\Lambda_{T}(t) \rbrace_{t\in \R^{+}} = \lbrace t, -\ln\ln R_{T}(t) \rbrace_{t\in \R^{+}}$ nazveme Log--Log R plotem. 
+\end{define}
+V případě že $R_T = R_0^{\gamma}$ (tedy Koziolův Greenův model), platí 
+$$-\ln\ln R_{T}(t) = -\ln\gamma -  \ln\ln R_0,$$
+což značí, že průběhy křivky jsou totožné, jenom posunuté o konstantu $-\ln \gamma$.
