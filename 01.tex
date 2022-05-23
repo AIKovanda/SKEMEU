@@ -13,7 +13,8 @@ Budeme pracovat s veličinou  $0\leq T\sim \FT$, která reprezentuje čas do por
 Význam této veličiny je (úpravou definice) $\FR(t)=\lim\limits_{\Delta t\to 0+}\frac{1}{\Delta t}\PP(t<T\leq t+\Delta t|T>t)$, tedy že výrobek přežil do času $t$ a v následujícím $\Delta t$ čase se pokazí. Tato veličina se definuje, protože je lépe uchopitelná. Může být rostoucí i klesající. Funkce $\RT(t)$ naproti tomu je vždy klesající a pohybuje se v intervalu $[0,1]$.
 
 \begin{theorem}[Vztahy] Platí, že
-	$$ \FR(t)=\frac{-\RT(t)}{\RT(t)}=-\frac{\d}{\d t}\big(-\ln \RT(t)\big). $$
+	$$ \FR(t)=\frac{-\RT'(t)}{\RT(t)}=\frac{\d}{\d t}\big(-\ln 
+	\RT(t)\big). $$
 	Definujeme \textbf{Cumulative Failure Rate} jako $\Lambda_T(t):= -\ln\RT(t)$. Potom
 	$$ \CFR(t) = \int_{0}^{t}\FR(u)\d u. $$
 	Dále platí, že 
@@ -78,8 +79,23 @@ Definujeme \textbf{mean residual life} jako $$\MRL(t)=\mu(t)=\int_{0}^{+\infty}\
 	$\IFR\Rightarrow\IFRA\Rightarrow\NBU\Rightarrow\NBUE$.
 \end{theorem}
 
+\begin{theorem}[Smirnoffova transformace]
+Mějme čas do poruchy $T\sim\RT$, $\widetilde{T}:=\CFR(T)$. 
+Pak $\widetilde{T}\sim\Exp(1)$ s $\lambda_{\widetilde{T}}=1$ 
+konstantní (tedy nestárne, ani nemládne, což vyplývá z vlastností 
+exponenciálního času do poruchy). Navíc platí, že $T=t\Leftrightarrow 
+\widetilde{T}=\CFR(t),~\forall t>0$ (pro spojité modely).
+\end{theorem}
+
 \section{Cenzorovaná data}
-Doteď se pracovalo s úplným výběrem. Měli jsme tedy $n$ $iid$ objektů a pozorovaly se všechny časy do poruchy. Nyní se však pracuje s živými objekty (lidmi, zvířaty apod.), které se mohou rozhodnout pozorování opustit. Může se například cenzorovat časem, tj. experiment se ukončí po nějakém čase. Může se cenzorovat i počtem poruch, tj. experiment je ukončen po $r$-té poruše. Třetí možností je cenzorovat náhodně. Každý pocient je tedy cenzorován jeho vlastním cenzorovaným časem, což je náhodná veličina s $\FF_C$.
+Doteď se pracovalo s úplným výběrem. Měli jsme tedy $n$ $iid$ objektů 
+a pozorovaly se všechny časy do poruchy. Nyní se však pracuje s živými 
+objekty (lidmi, zvířaty apod.), které se mohou rozhodnout pozorování 
+opustit. Může se například cenzorovat časem, tj. experiment se ukončí 
+po nějakém čase. Může se cenzorovat i počtem poruch, tj. experiment je 
+ukončen po $r$-té poruše. Třetí možností je cenzorovat náhodně. Každý 
+pacient je tedy cenzorován jeho vlastním cenzorovaným časem, což je 
+náhodná veličina s $\FF_C$.
 
 \begin{example}
 	Exponenciální rozdělení $T\sim\Exp(\lambda)$ má následující vlastnosti:\begin{enumerate}
@@ -88,16 +104,21 @@ Doteď se pracovalo s úplným výběrem. Měli jsme tedy $n$ $iid$ objektů a p
 		\item celkově tedy IFR=DFR, IFRA=DFRA, NBU=NWU
 	\end{enumerate}
 \end{example}
-\begin{theorem}[Smirnoffova transformace]
-	Mějme čas do poruchy $T\sim\RT$, $\widetilde{T}:=\CFR(T)=-\ln\RT(T)$. Pak $\widetilde{T}\sim\Exp(1)$ s $\lambda_{\widetilde{T}}=1$ konstantní (tedy nestárne, ani nemládne, což vyplývá z vlastností exponenciálního času do poruchy). Navíc platí, že $T=t\Leftrightarrow \widetilde{T}=\CFR(t),~\forall t>0$ (pro spojité modely).
-\end{theorem}
 
 \section{Bayesovské odhady v analýze spolehlivosti}
 
 \begin{define}[Gamma rozdělení]
 	Mějme $T|\lambda\sim \Exp(\lambda)$ u nestabilní výroby ($\lambda=\lambda(t)$). Zde se vyplatí použít nějaké apriorní informace o $\lambda$, tedy $\lambda\sim\pi(\lambda)=\mathrm{Gamma}(k,\beta)$. Potom
-	$$ \RT(t)=\int_{t}^{+\infty}f_T(u)\d u=\int_{t}^{+\infty}\int_{0}^{+\infty}\Exp(\lambda)\mathrm{Gamma}(k,\beta)\d\lambda\d u =\int_{0}^{+\infty}\mathrm{Gamma}(k,\beta)\RR_{T|\lambda}(t)\d\lambda=\frac{\beta^k}{(\beta+t)^k}, $$
-	což je Paretovo rozdělení (s těžkým chvostem). Dále platí, že $\FR(t)=\frac{k}{\beta+t}$, což je klesající funkce, takže se toto rozdělení hodí např. pro modelování první fáze výrobku.
+	\begin{align*}
+	 \RT(t)&=\int_{t}^{+\infty}f_T(u)\d 
+	 u=\int_{t}^{+\infty}\int_{0}^{+\infty}\Exp(\lambda)
+	 \mathrm{Gamma}(k,\beta)\d\lambda\d u 
+	 =\\&=\int_{0}^{+\infty}\mathrm{Gamma}(k,\beta)\RR_{T|\lambda}(t)\d
+	 \lambda=\frac{\beta^k}{(\beta+t)^k}, 
+	\end{align*}
+	což je Paretovo rozdělení (s těžkým chvostem). Dále platí, že 
+	$\FR(t)=\frac{k}{\beta+t}$, což je klesající funkce, takže se toto 
+	rozdělení hodí např. pro modelování první fáze výrobku.
 \end{define}
 
 \begin{example}
@@ -107,4 +128,12 @@ Doteď se pracovalo s úplným výběrem. Měli jsme tedy $n$ $iid$ objektů a p
 % lecture 5
 	Užitečná je metoda pro life-time aplikace. Například k lékaři chodí v různém čase různí pacienti, takže se nabízí možnost vzít první sadu pacientů, odhadnout na ní nějaký parametr a postupně tento parametr updatujeme dalšími sadami pacientů.
 
-Dejme tomu, že chceme udělat predikci pro $T_{n+1}$ čas do poruchy za předpokladu, že máme data $\textbf{t}=(t_1,...,t_n)$. Potom Bayesovská prediktivní spolehlivost $R_{T_{n+1}}(t):=\PP\big(T_{n+1}>t\big| t_1,...,t_n\big)=\int_{t}^{+\infty}f_\mathrm{B}^{\mathrm{PR}}(t)\d t$ se vypočítá na základě Bayesovské prediktivní hustoty ve tvaru $f_\mathrm{B}^{\mathrm{PR}}(t):=\int_{0}^{+\infty}f_T(t|\theta)\pi(\theta|\textbf{t})\d\t$. Tento způsob je sice komplikovaný, ale třeba pro měnící se $\lambda$ nejsou jiné metody k dispozici.
+Dejme tomu, že chceme udělat predikci pro $T_{n+1}$ čas do poruchy za 
+předpokladu, že máme data $\textbf{t}=(t_1,...,t_n)$. Potom Bayesovská 
+prediktivní spolehlivost $$R_{T_{n+1}}(t):=\PP\big(T_{n+1}>t\big| 
+t_1,...,t_n\big)=\int_{t}^{+\infty}f_\mathrm{B}^{\mathrm{PR}}(t)\d t$$ 
+se vypočítá na základě Bayesovské prediktivní hustoty ve tvaru 
+$$f_\mathrm{B}^{\mathrm{PR}}(t):=\int_{0}^{+\infty}f_T(t|\theta)
+\pi(\theta|\textbf{t})\d\t.$$
+ Tento způsob je sice komplikovaný, ale třeba pro měnící se $\lambda$ 
+nejsou jiné metody k dispozici.
