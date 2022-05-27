@@ -1,7 +1,6 @@
 \chapter{[SKE] Spolehlivost komponentních systémů, redundantní struktury, důležitost komponent.}
 
 % lecture 7
-\section{Komponentní systémy}
     \begin{define}
         Předpokládejme, že máme systém o $n$ komponentách. Budeme charakterizovat stav $i$-té komponenty $x_i$ binárně jako funguje/nefunguje, tedy $x_i\in\{0,1\}$. Označme $\textbf{x}=(x_1,...,x_n)$ jako \textbf{stavový vektor}. 
         
@@ -202,7 +201,7 @@
     
 \section{Extreme Value Distribution (EVD)}
 
-    V této části budeme pořítat spolehlivost pro extrémní události. Budeme tedy zkoumat, jak jsou rozloženy minima a maxima nějaké iid posloupnosti pozorování. To ale přesně odpovídá tomu, co se probíralo v minulých sekcích pro sériové a paralelní systémy.
+    V této části budeme počítat spolehlivost pro extrémní události. Budeme tedy zkoumat, jak jsou rozloženy minima a maxima nějaké iid posloupnosti pozorování. To ale přesně odpovídá tomu, co se probíralo v minulých sekcích pro sériové a paralelní systémy.
 
     \begin{define}[Gumbelovo rozdělení (sériový systém)]
         Nechť $T_j \sim f_T(t) = o\big(\e{-\beta\abs{t}} \big)$ (exponenciální chvosty) při $t \rightarrow \infty$, ale není useknuté zleva (např. Gauss, ale ne Pareto). Pak 
@@ -215,7 +214,7 @@
     Toto rozdělení se hodí pro modelování III části pro výrobky, kde je možné předpokládat dokonce exponenciální nárůst intenzity poruch. Takovéto výrobky spadají také do tzv. Gompertz-Makehamova zákona. Ten říká, že pravděpodobnost smrti roste exponenciálně s věkem.
 
     \begin{define}[Gumbelovo rozdělení (paralelní systém)]
-        Nechť $T_j \sim f_T(t) = o\big(\e{-\beta\abs{t}} \big)$ (exponenciální chvosty) při $t \rightarrow \infty$, ale není useknuté zprava (prakticky vždy vyhovuje ). Pak 
+        Nechť $T_j \sim f_T(t) = o\big(\e{-\beta\abs{t}} \big)$ (exponenciální chvosty) při $t \rightarrow \infty$, ale není useknuté zprava (prakticky vždy vyhovuje). Pak 
         $$ M_n:=\max(T_j)_1^n  \Dto Y  ,$$ kde
         pro distribuční funkci náhodné veličiny $Y$ platí, že	
         $$ \FF_Y(t)  = \e{-\exp(-\frac{t-\vartheta}{\alpha} )},~~t \in \R, \vartheta \in \R, \alpha \in\R^+,  $$
